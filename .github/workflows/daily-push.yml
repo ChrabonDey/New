@@ -1,0 +1,30 @@
+name: Daily JS Code Agent
+
+on:
+  schedule:
+    - cron: '0 0 * * *'   # Rat 12-tay
+    - cron: '0 12 * * *'  # Dupur 12-tay
+  workflow_dispatch:      # Manual run korar sujog
+
+jobs:
+  push-code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Generate Random Code
+        run: node agent.js
+
+      - name: Commit and Push
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -m "Automated daily JS snippet push"
+          git push
